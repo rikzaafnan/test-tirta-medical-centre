@@ -132,3 +132,11 @@
                 "current" : 1 // current page
             }
     }   
+
+
+## run laravel
+    git clone 
+    composer install
+    composer update
+    php artisan migrate
+    php artisan db:seed
