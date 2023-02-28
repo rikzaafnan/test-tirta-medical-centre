@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\ResponseFormatter;
+use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
+use App\Http\Requests\ProductStoreRequest;
 
 class ProductController extends Controller
 {
@@ -32,9 +37,68 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $sku = $request->input('sku');
+        $name = $request->input('name');
+        $price = $request->input('price');
+        $stock = $request->input('stock');
+        $categoryId = $request->input('categoryId');
+        
+
+        // check catagory
+        $category = Category::where('id',$categoryId)->first();
+
+        if(!$category) {
+            return ResponseFormatter::error(
+                null,
+                'Data category tidak ditemukan',
+                404
+            );
+        }
+
+        $uuid = Str::uuid();
+        $product = Product::create([
+            'id' => $uuid,
+            'sku' => $sku,
+            'name' => $name,
+            'price' => $price,
+            'stock' => $stock,
+            'category_id' => $categoryId,
+        ]);
+
+
+        if($product)
+        {
+            $productData = Product::where('id',$uuid)->first()->toArray();
+
+            if ($productData) {
+                
+                $data['id'] = $uuid;
+                $data['sku'] = $productData['sku'];
+                $data['name'] = $productData['name'];
+                $data['price'] = $productData['price'];
+                $data['stock'] = $productData['stock'];
+                $data['createdAt'] = $productData['created_at'];
+                $data['category'] =[
+                    "id" => $category["id"],
+                    "name" => $category["name"]
+                ];
+                return ResponseFormatter::success(
+                    $data,
+                    'Data product berhasil ditambahkan'
+                );
+            } else {
+                return ResponseFormatter::error(
+                    null,
+                    'Data product gagal ditambahkan',
+                    404
+                );
+            }
+
+                 
+        }
+
     }
 
     /**

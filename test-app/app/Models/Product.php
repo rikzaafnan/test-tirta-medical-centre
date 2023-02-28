@@ -1,19 +1,17 @@
 <?php
 
 namespace App\Models;
+use App\Models\Category;
 use Carbon\Carbon;
-
-use App\Models\Product;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Product extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'id', 'name'
+        'id', 'sku', 'name', 'price', 'stock','category_id'
     ];
 
     public function getCreatedAtAttribute($created_at)
@@ -21,10 +19,4 @@ class Category extends Model
         return Carbon::parse($created_at)
             ->getPreciseTimestamp(3);
     }
-
-
-    
-
 }
-
-

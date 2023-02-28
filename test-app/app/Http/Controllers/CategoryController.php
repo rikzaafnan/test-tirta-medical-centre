@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Http\Requests\CategoryStoreRequest;
 
 class CategoryController extends Controller
 {
@@ -35,7 +36,7 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
 
         $name = $request->input('name');
@@ -48,19 +49,27 @@ class CategoryController extends Controller
 
         if($category)
         {
-            $categoryDate = Category::find($uuid);
+            $categoryData = Category::find($uuid)->first()->toArray();
 
-            if($categoryDate)
+            if ($categoryData) {
+                
+                $data['id'] = $uuid;
+                $data['name'] = $categoryData['name'];
+                $data['createdAt'] = $categoryData['created_at'];
+
                 return ResponseFormatter::success(
-                    $categoryDate,
+                    $data,
                     'Data category berhasil ditambahkan'
                 );
-            else
+            } else {
                 return ResponseFormatter::error(
                     null,
                     'Data category gagal ditambahkan',
                     404
                 );
+            }
+
+                 
         }
 
     }
