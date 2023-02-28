@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Middleware\ApiKeyMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +23,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::middleware(ApiKeyMiddleware::class)->group(function () {
+Route::post('/categories', [CategoryController::class, 'store']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::get('/search', [SearchController::class, 'search']);
+});
 
 Route::get('/coba', [CategoryController::class, 'cobacoba']);
-Route::post('/categories', [CategoryController::class, 'store']);
+
+
 Route::get('/categories', [CategoryController::class, 'index']);
-Route::post('/products', [ProductController::class, 'store']);
+
+
 Route::get('/products', [ProductController::class, 'index']);
-Route::get('/search', [SearchController::class, 'search']);
+
