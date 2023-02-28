@@ -18,7 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('category')->get()->toArray();
+
+        dd($products);
     }
 
     /**
@@ -49,6 +51,7 @@ class ProductController extends Controller
         // check catagory
         $category = Category::where('id',$categoryId)->first();
 
+
         if(!$category) {
             return ResponseFormatter::error(
                 null,
@@ -57,15 +60,26 @@ class ProductController extends Controller
             );
         }
 
+
         $uuid = Str::uuid();
-        $product = Product::create([
-            'id' => $uuid,
-            'sku' => $sku,
-            'name' => $name,
-            'price' => $price,
-            'stock' => $stock,
-            'category_id' => $categoryId,
-        ]);
+
+        $product = new Product;
+        $product->id = $uuid;
+        $product->name = $name;
+        $product->sku = $sku;
+        $product->price = $price;
+        $product->stock = $stock;
+        $product->category_id = $categoryId;
+        $product->save();
+
+        // $product = Product::create([
+        //     'id' => $uuid,
+        //     'sku' => $sku,
+        //     'name' => $name,
+        //     'price' => $price,
+        //     'stock' => $stock,
+        //     'category_id' => $categoryId,
+        // ]);
 
 
         if($product)
@@ -81,7 +95,7 @@ class ProductController extends Controller
                 $data['stock'] = $productData['stock'];
                 $data['createdAt'] = $productData['created_at'];
                 $data['category'] =[
-                    "id" => $category["id"],
+                    "id" => $categoryId,
                     "name" => $category["name"]
                 ];
                 return ResponseFormatter::success(

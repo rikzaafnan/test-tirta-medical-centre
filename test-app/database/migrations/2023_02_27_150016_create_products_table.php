@@ -14,12 +14,12 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->string('sku');
+            $table->uuid('id')->primary();
+            $table->string('sku')->unique();
             $table->string('name');
             $table->integer('price');
             $table->integer('stock');
-            $table->uuid('category_id');
+            $table->string('category_id');
             $table->timestamps();
 
         });

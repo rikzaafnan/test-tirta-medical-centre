@@ -17,7 +17,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::get()->toArray();
+
+        dd($categories);
+
     }
 
     /**
@@ -42,14 +45,16 @@ class CategoryController extends Controller
         $name = $request->input('name');
 
         $uuid = Str::uuid();
-        $category = Category::create([
-            'id' => $uuid,
-            'name' => $name,
-        ]);
+
+
+        $category = new Category;
+        $category->id = $uuid;
+        $category->name = $name;
+        $category->save();
 
         if($category)
         {
-            $categoryData = Category::find($uuid)->first()->toArray();
+            $categoryData = Category::where('id', $uuid)->first()->toArray();
 
             if ($categoryData) {
                 

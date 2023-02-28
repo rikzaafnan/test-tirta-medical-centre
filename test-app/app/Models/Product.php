@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
+    protected $table = 'products';
     protected $fillable = [
         'id', 'sku', 'name', 'price', 'stock','category_id'
     ];
@@ -19,4 +21,32 @@ class Product extends Model
         return Carbon::parse($created_at)
             ->getPreciseTimestamp(3);
     }
+   
+
+        /**
+     * Get the value indicating whether the IDs are incrementing.
+     *
+     * @return bool
+     */
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    /**
+     * Get the auto-incrementing key type.
+     *
+     * @return string
+     */
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
+    public function category(){
+    	return $this->belongsTo(Category::class);
+    }
+
+
+    
 }

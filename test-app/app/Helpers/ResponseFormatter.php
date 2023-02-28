@@ -19,15 +19,17 @@ class ResponseFormatter
             'message' => null,
         ],
         'data' => null,
+        'paging' => null,
     ];
 
     /**
      * Give success response.
      */
-    public static function success($data = null, $message = null)
+    public static function success($data = null, $message = null, $paging = null)
     {
         self::$response['meta']['message'] = $message;
         self::$response['data'] = $data;
+        self::$response['paging'] = $paging;
 
         return response()->json(self::$response, self::$response['meta']['code']);
     }
